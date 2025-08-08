@@ -146,8 +146,8 @@ def empirical_p_value(window_file, random_file, label):
     rand_path = os.path.join(data_dir, random_file)
     print(window_path)
     
-    assert os.path.exists(window_path), f"❌ Missing: {window_path}"
-    assert os.path.exists(rand_path), f"❌ Missing: {rand_path}"
+    assert os.path.exists(window_path), f"XX Missing: {window_path}"
+    assert os.path.exists(rand_path), f"XX Missing: {rand_path}"
     win_df = pd.read_csv(window_path, sep="\t", header=None, names=["chrom", "start", "end", "dist"])
     rand_df = pd.read_csv(rand_path, sep="\t", header=None, names=["chrom", "start", "end", "dist"])
 
@@ -308,4 +308,5 @@ if __name__ == "__main__":
 #compare_pvals(pvals)
 
 # OPTIONALLY
+
 #pvalue("BedResultsWindow_st10.sorted.bedgraph","BedResultsRandom_st10.sorted.bedgraph")
