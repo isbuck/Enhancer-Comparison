@@ -137,28 +137,6 @@ def visualize(bedgraph_file):
         plt.show()
         plt.close()
 
-pvals = []
-def empirical_p_value(window_file, random_file, label):
-    """
-    Compute empirical p-value for minimum window distance vs random.
-    """
-    window_path = os.path.join(data_dir, window_file)
-    rand_path = os.path.join(data_dir, random_file)
-    print(window_path)
-    
-    assert os.path.exists(window_path), f"XX Missing: {window_path}"
-    assert os.path.exists(rand_path), f"XX Missing: {rand_path}"
-    win_df = pd.read_csv(window_path, sep="\t", header=None, names=["chrom", "start", "end", "dist"])
-    rand_df = pd.read_csv(rand_path, sep="\t", header=None, names=["chrom", "start", "end", "dist"])
-
-    min_win = win_df["dist"].min()
-    k = (rand_df["dist"] <= min_win).sum()
-    N = len(rand_df)
-    p_raw = k / N
-    pvals.append(p_raw)
-    print(label)
-    return p_raw
-
 def pvalue(window_file, random_file, label, output_bedfile=None):
     """
     Compute p-values for each window and save to BED file.
@@ -237,7 +215,7 @@ def pvalue(window_file, random_file, label, output_bedfile=None):
     print(f"Total - Full Overlaps: {full} Partial Overlaps: {partials}")
     print(f"Number of windows closer than {bound} randoms: {count}")
     print("\n")
-
+    
 def compare_distributions(window_file, random_file, label):
     """
     Compare distributions of window and random distances, plot, and compute p-values.
@@ -261,7 +239,7 @@ def compare_distributions(window_file, random_file, label):
     plt.close()
 
     pvalue(window_file, random_file, label)
-
+  
 def compare_pvals(pvals):
     """
     Barplot comparing p-values for different enhancer windows.
@@ -306,7 +284,3 @@ if __name__ == "__main__":
 
 # OPTIONALLY
 #compare_pvals(pvals)
-
-# OPTIONALLY
-
-#pvalue("BedResultsWindow_st10.sorted.bedgraph","BedResultsRandom_st10.sorted.bedgraph")
