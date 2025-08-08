@@ -67,28 +67,36 @@ def comparison(files):
                 if start_ref <= start <= end_ref or start_ref <= end <= end_ref or start <= start_ref <= end or start <= end_ref <= end:
                     results.append([label, sim_label, pvalue, rank])
     output_df = pd.DataFrame(results, columns=["Enhancer", "Sequence", "p-value", "Rank"])
+   
     # Group duplicate entries & store lists of values per Enhancer+Sequence
     grouped_df = output_df.groupby(["Enhancer", "Sequence"]).agg(list).reset_index()
+    
     # Enforce order for Enhancer & Sequence
     grouped_df["Enhancer"] = pd.Categorical(grouped_df["Enhancer"], categories=[f.replace("_merged_sorted.bed", "") for f in files], ordered=True)
     grouped_df["Sequence"] = pd.Categorical(grouped_df["Sequence"], categories=list(overlaps.keys()), ordered=True)
+        
     # Convert lists into comma-separated strings
     grouped_df["p-value"] = grouped_df["p-value"].apply(lambda x: ', '.join(map(str, x)))
     grouped_df["Rank"] = grouped_df["Rank"].apply(lambda x: ', '.join(map(str, x)))
+        
     # Sort the grouped DataFrame
     grouped_df = grouped_df.sort_values(["Enhancer", "Sequence"])
+        
     # Pivot tables for p-values and ranks
     pivot_pval = grouped_df.pivot(index="Enhancer", columns="Sequence", values="p-value")
     pivot_rank = grouped_df.pivot(index="Enhancer", columns="Sequence", values="Rank")
+        
     # Save tables to CSV
     pivot_pval.to_csv(os.path.join(output_dir, f"full-{perm}qval-{cutoff_qval}_pvalues-{pval}_output.csv"))
     pivot_rank.to_csv(os.path.join(output_dir, f"full-{perm}qval-{cutoff_qval}_ranks-{pval}_output.csv"))
+        
     # Prepare numeric p-values for heatmap coloring
     pval_numeric = grouped_df.copy()
     pval_numeric["p-value"] = pval_numeric["p-value"].apply(
         lambda x: min(map(float, str(x).split(','))) if x else np.nan
     )
     pivot_pval_numeric = pval_numeric.pivot(index="Enhancer", columns="Sequence", values="p-value")
+        
     # Ensure all rows/columns are represented
     pivot_pval_numeric = pivot_pval_numeric.reindex(
         index=[f.replace("_merged_sorted.bed", "") for f in files],
@@ -96,10 +104,12 @@ def comparison(files):
     )
     print("pivot_pval_numeric:")
     print(pivot_pval_numeric)
+        
     # Align annotation array to numeric data shape
     pivot_pval = pivot_pval.reindex_like(pivot_pval_numeric)
     pivot_rank = pivot_rank.reindex_like(pivot_pval_numeric)
     annot_array = pivot_pval.copy()
+        
     # Build annotation text for heatmap
     for enhancer in annot_array.index:
         for sequence in annot_array.columns:
@@ -109,6 +119,7 @@ def comparison(files):
                 annot_array.loc[enhancer, sequence] = ""
             else:
                 annot_array.loc[enhancer, sequence] = f"{pval_text}\n({rank_text})"
+                    
     # Plot heatmap
     plt.figure(figsize=(10, 6))
     sns.heatmap(
@@ -147,14 +158,17 @@ def compare(files):
                         ha="center", fontsize=4, color="black")
             num += 1
         y_position += 1  # Move to next row for each BED file
+            
     # Plot overlap regions as purple horizontal boxes
     for i, (name, (start, end)) in enumerate(overlaps.items()):
         y_top = y_position + i + 0.5
         ax.add_patch(patches.Rectangle((start, y_top - 0.5), end - start, 0.5, color="purple", alpha=0.6))
+            
         # Add vertical dashed lines at region boundaries
         ax.plot([start, start], [y_top,-1], linestyle="dashed", color="navy", alpha=0.9)
         ax.plot([end, end], [y_top, -1], linestyle="dashed", color="navy", alpha=0.9)
         ax.text(start + 100, y_position + i + 0.2, name, fontsize=5, color="indigo", weight="bold")
+            
     # Adjust plot settings
     ax.set_xlim(13056267, 13086627)
     ax.set_ylim(-1, y_position + len(overlaps) + 1)
@@ -196,6 +210,7 @@ def annotate_merged_bed_with_motifs(
         ]).to_csv(output_file, sep="\t", index=False)
         print(f"Motif-annotated merged BED saved to {output_file}")
         return
+            
     # Read FIMO file
     try:
         fimo_df = pd.read_csv(fimo_file, sep='\t', comment='#')
@@ -204,6 +219,7 @@ def annotate_merged_bed_with_motifs(
         return
     if cutoff_metric in fimo_df.columns:
         fimo_df = fimo_df[fimo_df[cutoff_metric] < cutoff_qval]
+            
     # Extract chrom, start, stop from sequence_name if not present
     if 'sequence_name' in fimo_df.columns and not {'chrom', 'start', 'stop'}.issubset(fimo_df.columns):
         fimo_df[['chrom', 'start', 'stop']] = fimo_df['sequence_name'].str.split('_', expand=True)
@@ -215,6 +231,7 @@ def annotate_merged_bed_with_motifs(
             "Chromosome", "Start", "End", "Region_p-value", "Motif_ID", "Motif_Name"
         ]).to_csv(output_file, sep="\t", index=False)
         return
+            
     # Ensure types are correct
     bed_df['start'] = bed_df['start'].astype(int)
     bed_df['end'] = bed_df['end'].astype(int)
@@ -225,6 +242,7 @@ def annotate_merged_bed_with_motifs(
         chrom = str(row['chrom'])
         start = row['start']
         end = row['end']
+            
         # Find motif hits on the same chrom that overlap this region
         hits = fimo_df[
             (fimo_df['chrom'].astype(str) == chrom) &
@@ -310,6 +328,7 @@ enhancer_fimo_dir = rf"C:\Users\izzye\OneDrive - Johns Hopkins\Documents\BRIGHT\
 os.makedirs(wind_dir, exist_ok=True)
 os.makedirs(out_dir, exist_ok=True)
 
+# OPTIONAL
 # Annotate merged/sorted BED files with motifs from corresponding FIMO files
 for bedfile in files:
     base = bedfile.replace("_merged_sorted.bed", "")
