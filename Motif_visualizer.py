@@ -165,16 +165,16 @@ def visualize():
                 s=20,
                 label=f"Empirical p < {pval}"
             )
-            # Overlay points with p-value == 0
+            # Overlay points with certain p-value 
             # Shouldn't be any
-            sig_zero = merged["raw_pval"] == 0
+            sig_zero = merged["raw_pval"] == 0.0001
             plt.scatter(
                 merged.loc[sig_zero, "midpoint"],
                 merged.loc[sig_zero, file_place],
                 color='red',
                 alpha=0.9,
                 s=20,
-                label="p = 0"
+                label="p = 0.0001"
             )
         else:
             print(f"Warning: No p-value file found for {file}")
@@ -205,56 +205,6 @@ def visualize():
         plt.savefig(plot_path, dpi=300)
         print(f"Plot saved to {plot_path}")
         plt.show()
-
-# OPTIONAL
-def plot_all_and_matching_midpoints(file1, file2, label1="All", label2="Matching", color1="gray", color2="red", output_file=None):
-    """
-    Plots all points from file1 in gray, and overlays in red those with matching midpoints in file2.
-    """
-    # Read first file (bedgraph: chrom, start, end, score)
-    df1 = pd.read_csv(file1, sep="\t", header=None, names=["chrom", "start", "end", "score"])
-    df1["start"] = pd.to_numeric(df1["start"], errors="coerce")
-    df1["end"] = pd.to_numeric(df1["end"], errors="coerce")
-    df1["score"] = pd.to_numeric(df1["score"], errors="coerce")
-    df1["midpoint"] = (df1["start"] + df1["end"]) // 2
-    
-    # Read second file (can be bedgraph or BED)
-    df2 = pd.read_csv(file2, sep="\t", header=None, names=["chrom", "start", "end", "name", "pvalue", "type"])
-    df2["start"] = pd.to_numeric(df2["start"], errors="coerce")
-    df2["end"] = pd.to_numeric(df2["end"], errors="coerce")
-    df2["midpoint"] = (df2["start"] + df2["end"]) // 2
-    
-    # Find matching midpoints (and chrom)
-    match = pd.merge(df1, df2[["chrom", "midpoint"]], on=["chrom", "midpoint"], how="inner")
-    
-    plt.figure(figsize=(14, 6))
-    plt.scatter(df1["midpoint"], df1["score"], color=color1, alpha=0.7, label=label1)
-    
-    if not match.empty:
-        plt.scatter(match["midpoint"], match["score"], color=color2, alpha=0.8, label=label2)
-    
-    # Draw boxes for each region in overlaps
-    for start, end in overlaps.values():
-        rect = mpatches.Rectangle(
-            (start, plt.ylim()[0]),
-            end - start,
-            plt.ylim()[1] - plt.ylim()[0],
-            linewidth=0,
-            edgecolor=None,
-            facecolor='lightblue',
-            alpha=0.2,
-            label=None
-        )
-        plt.gca().add_patch(rect)
-    plt.xlabel("Genomic Midpoint (bp)")
-    plt.ylabel("Score")
-    plt.title("All points (gray) and matching midpoints (red, boxed overlaps)")
-    plt.legend()
-    plt.tight_layout()
-    if output_file:
-        plt.savefig(output_file, dpi=300)
-        print(f"Plot saved to {output_file}")
-    plt.show()
 
 def pvalue(window_file, random_file, label, output_bedfile=None):
     """
@@ -308,7 +258,6 @@ def pvalue(window_file, random_file, label, output_bedfile=None):
     bed_df.to_csv(output_bedfile, sep="\t", header=False, index=False)
     print(f"BED file with raw p-values {pval} saved to: {output_bedfile}")
     
-    
     # OPTIONAL BH-adjustment
     # Save raw and BH-adjusted p-values to CSV for heatmap usage
     raw_bh_df = pd.DataFrame({
@@ -321,7 +270,6 @@ def pvalue(window_file, random_file, label, output_bedfile=None):
     raw_bh_path = os.path.join(data_dir, f"{label}_pvals.csv")
     raw_bh_df.to_csv(raw_bh_path, index=False)
     print(f"Raw + BH p-values {pval} saved to: {raw_bh_path}")
-    
     
     # Identify BH-significant points (adjusted p < 0.05)
     significant = pvals_bh < 0.05
@@ -345,6 +293,7 @@ def pvalue(window_file, random_file, label, output_bedfile=None):
     plt.tight_layout()
     plt.show()
 
+# OPTIONAL
 def plot_jaccard_peaks(bedgraph_file, value_col="distance", out_dir=None, height=None, distance=10, save_peaks=True):
     """
     Finds and plots peaks in motif similarity scores across the genome.
@@ -419,4 +368,5 @@ if __name__ == "__main__":
         if "_windows.bedgraph" in file:
             plot_jaccard_peaks(os.path.join(data_dir, file), value_col="distance", out_dir=scatter_dir, height=0.5)
     
+
     print("finished 1")
