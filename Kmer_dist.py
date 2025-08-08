@@ -77,9 +77,9 @@ def check_files(seq_dict):
     for file in seq_dict.keys():  
         file_path = os.path.join(input_dir, file)
         if os.path.exists(file_path):  
-            print(f"✅ File found: {file_path}")
+            print(f"File found: {file_path}")
         else:
-            print(f"❌ File missing: {file_path}")
+            print(f"XX File missing: {file_path}")
 
 def save_bedgraph_line(out_file, header, score):
     """
@@ -196,4 +196,5 @@ if __name__ == "__main__":
     # Optionally run visualization script
     results_vis = subprocess.run(["python", "Kmer_visualizer.py"], capture_output=True, text=True, check=True)
     print(results_vis.stdout)
+
     print("finished")
