@@ -1,7 +1,7 @@
 # Overview
 Various other scripts used.
 
-## Shuffle
+## Shuffle_Seq
 Randomly shuffles enhancer base pairs by x%.
 
 ## Motif_Ordering
