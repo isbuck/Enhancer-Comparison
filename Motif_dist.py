@@ -75,14 +75,14 @@ def extract_motifs(fimo_file):
     try:
         df = pd.read_csv(fimo_file, sep='\t', comment='#')
         if df.empty: 
-            print(f"❌{fimo_file} is empty. No motif hits.")
+            print(f"XX{fimo_file} is empty. No motif hits.")
             return set()
         if cutoff_metric in df.columns:
             df = df[df[cutoff_metric] < cutoff_qval]
         print(f"{fimo_file}: {len(df)} motif hits after q-value < {cutoff_qval}")
         return set(df['motif_id'].unique())
     except pd.errors.EmptyDataError:
-        print(f"❌ {fimo_file} is empty or has no columns.")
+        print(f"XX {fimo_file} is empty or has no columns.")
         return set()
 
 def jaccard_distance(set1, set2):
@@ -102,7 +102,7 @@ def write_bedgraph_line(out_file, region_id, score):
         chrom, start, end = region_id.split("_")
         out_file.write(f"{chrom}\t{start}\t{end}\t{score:.6f}\n")
     except Exception as e:
-        print(f"❌ Invalid region ID format: {region_id} – {e}")
+        print(f"XX Invalid region ID format: {region_id} – {e}")
 
 def extract_motif_matrix(fimo_file):
     """
@@ -151,7 +151,7 @@ if __name__ == "__main__":
             else:
                 enhancer_motifs = extract_motifs(enhancer_path)
         except FileNotFoundError:
-            print(f"❌ Missing enhancer file: {enhancer_path}")
+            print(f"XX Missing enhancer file: {enhancer_path}")
             continue
 
         window_out = os.path.join(data_dir, f"{enhancer_id}_windows.bedGraph")
@@ -177,7 +177,7 @@ if __name__ == "__main__":
                                 dist = jaccard_distance(enhancer_motifs, region_motifs)
                                 write_bedgraph_line(wf, region_id, dist)
                     except Exception as e:
-                        print(f"❌ Error processing {path_win}: {e}")
+                        print(f"XX Error processing {path_win}: {e}")
 
             # Process random files
             for random_file in random_files:
@@ -198,8 +198,9 @@ if __name__ == "__main__":
                                 dist = jaccard_distance(enhancer_motifs, region_motifs)
                                 write_bedgraph_line(rf, region_id, dist)
                     except Exception as e:
-                        print(f"❌ Error processing {path_rand}: {e}")
+                        print(f"XX Error processing {path_rand}: {e}")
 
         print(f"Saved: {window_out}")
         print(f"Saved: {random_out}")
+
         
