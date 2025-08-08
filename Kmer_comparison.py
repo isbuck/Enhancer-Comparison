@@ -44,6 +44,16 @@ files = [
     "Peak9821_merged_sorted.bed"
 ]
 
+# Reference regions for overlap
+overlaps = {
+    "sim_A1.0": (13056591, 13057759),
+    "sim_st10": (13060273, 13060969),
+    "sim_D2.1": (13064360, 13066407),
+    "sim_E2.3": (13066277, 13068610),
+    "sim_VT040842": (13067711, 13069801),
+    "sim_1.6MLE": (13070722, 13072353)
+}
+
 def comparison(bed_file):
     """
     Summarizes p-values and ranks for enhancer overlaps, outputs CSV tables and heatmap.
@@ -72,16 +82,6 @@ def comparison(bed_file):
             # Print the best (lowest) p-value region for each file
             if int(rank) == 1:
                 print(f"{name} {start}, {end}, {pvalue}")
-                
-            # Define reference regions for overlap
-            overlaps = {
-                "sim_A1.0": (13056591, 13057759),
-                "sim_st10": (13060273, 13060969),
-                "sim_D2.1": (13064360, 13066407),
-                "sim_E2.3": (13066277, 13068610),
-                "sim_VT040842": (13067711, 13069801),
-                "sim_1.6MLE": (13070722, 13072353)
-            }
             
             # Check if region overlaps any reference region
             for sim_label, (start_ref, end_ref) in overlaps.items():
@@ -163,16 +163,6 @@ def compare(files):
     """
     Visualizes enhancer regions and reference overlaps as colored boxes.
     """
-    
-    # Reference regions for overlap
-    overlaps = {
-        "sim_A1.0": (13056591, 13057759),
-        "sim_st10": (13060273, 13060969),
-        "sim_D2.1": (13064360, 13066407),
-        "sim_E2.3": (13066277, 13068610),
-        "sim_VT040842": (13067711, 13069801),
-        "sim_1.6MLE": (13070722, 13072353)
-    }
     fig, ax = plt.subplots(figsize=(12, 4))
     y_position = 0
     
@@ -216,4 +206,5 @@ def compare(files):
 if __name__ == "__main__":
     # Run comparison and visualization
     compare(files)
+
     comparison(files)
