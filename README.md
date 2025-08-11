@@ -8,7 +8,7 @@ Kmer_dist -> Kmer_visualizer -> Kmer_bed -> Kmer_comparison
 
 ## Approach
 ### Kmer_dist:
-Takes FASTA sequence files from windows in a locus of a genome and randomly selected windows from the entire genome. In our case we used the _Drosophila_ genome and the _Drosophila sim locus_. These windows are then analyzed based on a k-mer and distance metric. 
+Takes FASTA sequence files from windows in a locus of a genome and randomly selected windows from the entire genome. In our case we used the _Drosophila_ genome and the _Drosophila sim_ locus. These windows are then analyzed based on a k-mer and distance metric. 
 
 In our case k-mer values 2-6 were used and the following Alfpy word-based distance metrics: 
 canberra, braycurtis, chebyshev, csv, euclid_norm, euclid_squared, google, jsd, kld, lcc, manhattan, minkowski
