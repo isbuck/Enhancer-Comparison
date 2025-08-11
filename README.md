@@ -7,7 +7,7 @@ The following scripts may be ran in order: Motif_dist -> Motif_visualizer -> Mot
 
 ## Approach
 ### Motif_dist
-Takes tsv output FIMO files from windows in a locus of a genome and randomly selected windows from the entire genome. In our case we used the Drosophila genome and the Drosophila sim locus. These windows are then analyzed based on a their motif content for a distance metric.
+Takes tsv output FIMO files from windows in a locus of a genome and randomly selected windows from the entire genome. In our case we used the _Drosophila_ genome and the _Drosophila sim_ locus. These windows are then analyzed based on a their motif content for a distance metric.
 
 Locus windows and random windows have their motifs extracted which are then filtered based on a qvalue cutoff. We used a cutoff of qvalue = .05 for _FlyFactorSurvey_ output files and no cutoff (qvalue = 1) for _MidlineSpecific_ output files.
 
