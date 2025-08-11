@@ -11,7 +11,7 @@ Takes tsv output FIMO files from windows in a locus of a genome and randomly sel
 
 Locus windows and random windows have their motifs extracted which are then filtered based on a qvalue cutoff. We used a cutoff of qvalue = .05 for _FlyFactorSurvey_ output files and no cutoff (qvalue = 1) for _MidlineSpecific_ output files.
 
-Each window is then scored based on its motif contnent in relation to its respective enhancer by either Jaccard or Summed Canberra distance. Jaccard distance is 1 - intersection/union. Summed Canberra distance calculates the canberra distance between a window files and enhancer file after building a summed score matrix based on the motif scores.
+Each window is then scored based on its motif content in relation to its respective enhancer by either Jaccard or Summed Canberra distance. Jaccard distance is 1 - intersection/union. Summed Canberra distance calculates the canberra distance between a window files and enhancer file after building a summed score matrix based on the motif scores.
 
 A bedGRAPH file is output for each Locus Window file or Random Window file containing the chromose, window start, window end, score for each window in that file.
 
