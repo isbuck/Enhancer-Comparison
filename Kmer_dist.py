@@ -25,7 +25,6 @@ input_dir = r"C:\Users\izzye\OneDrive - Johns Hopkins\Documents\BRIGHT\seq\windo
 base_data_dir = r"C:\Users\izzye\OneDrive - Johns Hopkins\Documents\BRIGHT\seq"  # Base directory for output files
 enhancer_dir = r"C:\Users\izzye\OneDrive - Johns Hopkins\Documents\BRIGHT\seq\enhancers"  # Base directory for enhancer files
 
-
 group_name = f"{distance}"
 
 # Set output subfolder path based on p-value
@@ -196,3 +195,4 @@ if __name__ == "__main__":
     print(results_vis.stdout)
 
     print("finished")
+
