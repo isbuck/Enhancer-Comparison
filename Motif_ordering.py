@@ -428,7 +428,7 @@ def plot_kd_boxes_and_heatmap(annotated_bed_files, overlaps, out_dir, value_col=
     print(f"Heatmap saved to: {heatmap_path}")
     plt.show()
 
-def plot_top10pct_merged_boxes_and_heatmap(annotated_bed_files, overlaps, out_dir, value_col="Weighted_Kd", 
+def plot_toppct_merged_boxes_and_heatmap(annotated_bed_files, overlaps, out_dir, value_col="Weighted_Kd", 
                                           percentile_cutoff=None):
     """
     Create visualization showing only top percentile merged regions by absolute Weighted_Kd values.
@@ -684,7 +684,7 @@ if __name__ == "__main__":
     
     # Call plotting functions
     plot_kd_boxes_and_heatmap(annotated_bed_files, overlaps, plot_out_dir, value_col="Weighted_Kd")
-    plot_top10pct_merged_boxes_and_heatmap(annotated_bed_files, overlaps, plot_out_dir, value_col="Weighted_Kd")
+    plot_toppct_merged_boxes_and_heatmap(annotated_bed_files, overlaps, plot_out_dir, value_col="Weighted_Kd")
 
     # List of all window Kd score files (with norm)
     kd_score_files = [
@@ -694,4 +694,5 @@ if __name__ == "__main__":
     ]
 
 plot_logpval_x_weightedkd_all(ann_bed_files, overlaps, plot_out_dir)
+
 
