@@ -15,6 +15,12 @@ Randomly shuffles enhancer base pairs by x%.
 - plot_top10pct_merged_boxes_and_heatmap: Create visualization showing only top percentile merged regions by absolute Weighted_Kd values
 - plot_logpval_x_weightedkd_all: Create visualization of combined log p-value × weighted Kd scores
 
+## All_motif_comp
+- extract_motif_sets: Extracts motif sets for each region from a FIMO file, filtering by cutoff
+- extract_motif_vectors: Extracts motif score vectors for each region from a FIMO file, filtering by cutoff
+- jaccard_distance: Computes Jaccard distance between two sets
+- canberra_distance: Computes Canberra distance between two vectors
+- all_vs_all_comparison: For a given window base name, computes all-vs-all motif distance matrix, saves CSV, plots heatmap, performs clustering, and visualizes clusters
 
 
 
